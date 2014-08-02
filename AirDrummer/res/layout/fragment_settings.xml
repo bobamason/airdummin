@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_bg_color" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:src="@drawable/divider" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Choose Sensor"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/text_color" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginTop="4dp"
+            android:text="This may have to be changed on some devices for the drums to work properly."
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/text_color" />
+
+        <Spinner
+            android:id="@+id/sensor_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="10dp" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/divider" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Drum Sounds"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/text_color" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/drum_btn1"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/drum_btn1"
+                android:text="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/text_color"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/drum_btn2"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/drum_btn2"
+                android:text="2"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/text_color"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/drum_btn3"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/drum_btn3"
+                android:text="3"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/text_color"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/drum_btn4"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/drum_btn4"
+                android:text="4"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/text_color"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/drum_btn5"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/drum_btn5"
+                android:text="5"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/text_color"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/fragmentsettingsImageView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/divider" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Drum Count"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/text_color" />
+
+        <LinearLayout
+            android:id="@+id/fragmentsettingsLinearLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/down_btn_count_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button"
+                android:text="-"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/text_color" />
+
+            <TextView
+                android:id="@+id/drum_count_text_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="0 drums"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/text_color" />
+
+            <Button
+                android:id="@+id/up_btn_count_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button"
+                android:text="+"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/text_color" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/divider" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Change Pitch of Sounds"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/text_color" />
+
+        <Switch
+            android:id="@+id/pitch_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/text_color"
+            android:thumb="@drawable/switch_bg"
+            android:track="@drawable/track_bg" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/divider" />
+
+        <TextView
+            android:id="@+id/sensitivity_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Drum Hit Sensitivity: 0"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/text_color" />
+
+        <SeekBar
+            android:id="@+id/sensitivity_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="10dp"
+            android:max="9"
+            android:progressDrawable="@drawable/seekbar_progress"
+            android:thumb="@drawable/seekbar_thumb" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/divider" />
+
+        <TextView
+            android:id="@+id/span_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Drum Span: 0 degrees"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/text_color" />
+
+        <SeekBar
+            android:id="@+id/span_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="10dp"
+            android:max="6"
+            android:progressDrawable="@drawable/seekbar_progress"
+            android:thumb="@drawable/seekbar_thumb" />
+    </LinearLayout>
+
+</ScrollView>

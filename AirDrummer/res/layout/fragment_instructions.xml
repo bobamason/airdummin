@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#262626" >
+
+    <Button
+        android:id="@+id/instructions_complete_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/calibrate_btn"
+        android:text="@android:string/ok"
+        android:textAppearance="@android:style/TextAppearance.Large"
+        android:textColor="@color/text_color" />
+
+    <ImageView
+        android:id="@+id/instructions_imageview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/instructions_complete_btn"
+        android:scaleType="fitCenter"
+        android:src="@drawable/drum_instruction" />
+
+    <TextView
+        android:id="@+id/instructions_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/instructions_complete_btn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="#33000000"
+        android:gravity="center_horizontal"
+        android:padding="6dp"
+        android:text="Move your device side to side in front of you to select different drums. Press the CALIBRATE button at any time to recalibrate and center the drums in front of you."
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</RelativeLayout>
