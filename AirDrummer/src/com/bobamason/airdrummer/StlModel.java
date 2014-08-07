@@ -14,6 +14,7 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.nfc.*;
 
 public class StlModel {
 	private FloatBuffer vertexBuffer;
@@ -71,12 +72,17 @@ public class StlModel {
 	private float lightStrength = 1f;
 
 	private Vector3 currentTrans = new Vector3();
+	
+	private long startTime, endTime;
+	
+	private String tag;
 
 	public StlModel(Context ctx, String filename, int program) {
 
 		context = ctx;
 		this.filename = filename;
 		mProgram = program;
+		startTime = System.currentTimeMillis();
 		new LoadModelTask().execute(filename);
 
 		setIdentity();
@@ -89,6 +95,7 @@ public class StlModel {
 
 		context = ctx;
 		this.filename = filename;
+		tag = "3D model " + filename;
 		mProgram = program;
 		new LoadModelTask().execute(filename);
 
@@ -212,14 +219,6 @@ public class StlModel {
 
 			for (i = 0; i < verticesList.size(); i++) {
 				vertices[i] = verticesList.get(i);
-				// ------- debug only with shape02.stl
-				// Log.d("array", i + " | " + vertices[i]);
-			}
-			if (vertices.length > 12) {
-				for (i = 0; i < 12; i++) {
-					Log.d(" 2 triangle sample ", i + " | " + vertices[i]
-							+ (i % 6 >= 3 ? " : normal" : " : vertex"));
-				}
 			}
 
 			isOk = true;
@@ -348,8 +347,8 @@ public class StlModel {
 			if (!result)
 				throw new RuntimeException("stl model failed to load");
 			vertexCount = vertices.length / 6;
-			Log.d("lenght", vertices.length + "");
-			Log.d("count", vertexCount + "");
+			Log.d(tag, "vertices[] length: " + vertices.length);
+			Log.d(tag, "vertex count: " + vertexCount);
 
 			ByteBuffer bb = ByteBuffer.allocateDirect(vertices.length * 4);
 			bb.order(ByteOrder.nativeOrder());
@@ -358,11 +357,14 @@ public class StlModel {
 			vertexBuffer.put(vertices);
 			vertexBuffer.position(0);
 
-			Log.d("buffer", vertexBuffer.capacity() + "");
-			Log.d("stride", vertexStride + "");
+			Log.d(tag, "buffer capacity: " + vertexBuffer.capacity());
+			Log.d(tag, "vertex stride: " + vertexStride);
+			
+			endTime = System.currentTimeMillis();
+			Log.d(tag, "time to load: " + ((endTime - startTime) / 1000d) + " seconds");
 
 			loaded = result;
-			Log.d("loaded", String.valueOf(loaded) + " " + filename);
+			Log.d(tag, "loaded = " +String.valueOf(loaded));
 
 			if (mLoadStatusListener != null)
 				mLoadStatusListener.completed();

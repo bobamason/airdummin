@@ -2,8 +2,8 @@ package com.bobamason.airdrummer;
 
 import java.util.List;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
+//import com.google.android.gms.ads.AdRequest;
+//import com.google.android.gms.ads.AdView;
 
 import android.app.FragmentTransaction;
 import android.app.Service;
@@ -67,7 +67,7 @@ public class MainActivity extends ActionBarActivity implements
 		drumKit = new DrumKit(this);
 
 		actionBar = getSupportActionBar();
-		actionBar.setIcon(new ColorDrawable(Color.TRANSPARENT));
+		//actionBar.setIcon(new ColorDrawable(Color.TRANSPARENT));
 		actionBar.setHomeAsUpIndicator(R.drawable.ic_action_previous_item);
 
 		if (firstTime)
@@ -75,10 +75,10 @@ public class MainActivity extends ActionBarActivity implements
 		else
 			addDrumFragment();
 
-		AdView adView = (AdView) this.findViewById(R.id.adView);
-		AdRequest adRequest = new AdRequest.Builder().addTestDevice(deviceId)
-				.addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
-		adView.loadAd(adRequest);
+//		AdView adView = (AdView) this.findViewById(R.id.adView);
+//		AdRequest adRequest = new AdRequest.Builder().addTestDevice(deviceId)
+//				.addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
+//		adView.loadAd(adRequest);
 	}
 
 	private void addInstructionsFragment() {

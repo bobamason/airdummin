@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="actionbar_text">#FFFFFF</color>
-    <color name="actionbar_bg_color">#2F393F</color>
-    <color name="main_bg_color">#000000</color>
+    <color name="actionbar_text">#E3E3E3</color>
+    <color name="actionbar_bg_color">#414141</color>
+    <color name="main_bg_color">#D4D4D4</color>
+	<color name="section_bg_color">#FFFFFF</color>
+	<color name="shadow_color">#66232323</color>
 	<color name="drum_color1">#ff0099cc</color>
 	<color name="drum_color2">#ff669900</color>
 	<color name="drum_color3">#ffff8800</color>
 	<color name="drum_color4">#ffcc0000</color>
 	<color name="drum_color5">#ff9933cc</color>
-	<color name="btn_clicked_color">#A1A1A1</color>
-	<color name="text_color">#FFFFFF</color>
-	<color name="divider_color">#252525</color>
+	<color name="btn_clicked_color">#808080</color>
+	<color name="text_color">#232323</color>
+	<color name="divider_color">#FFFFFF</color>
+	<color name="default_grid_color">#FFFFFF</color>
 	<color name="seekbar_bg_color">@color/actionbar_bg_color</color>
 	<color name="seekbar_fill_color">@color/text_color</color>
 	<color name="seekbar_thumb_color">@color/text_color</color>

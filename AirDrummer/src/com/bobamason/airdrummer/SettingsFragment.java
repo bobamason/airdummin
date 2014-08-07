@@ -21,17 +21,19 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 public class SettingsFragment extends Fragment {
+	
 	private Button upCountButton, downCountButton;
 
 	Button d1, d2, d3, d4, d5;
 
-	SeekBar spanBar, sensitivityBar;
+	//SeekBar spanBar, sensitivityBar;
 
 	private ArrayList<Button> drumButtons = new ArrayList<Button>();
 
-	private TextView drumCountText, spanText, sensitivityText;
+	private TextView drumCountText;
+	//private TextView spanText, sensitivityText;
 
-	private Switch pitchSwitch;
+	//private Switch pitchSwitch;
 
 	private Activity activity;
 
@@ -75,13 +77,13 @@ public class SettingsFragment extends Fragment {
 		d5.setOnClickListener(drumOnClickListener);
 		drumButtons.add(4, d5);
 
-		pitchSwitch = (Switch) view.findViewById(R.id.pitch_switch);
+		//pitchSwitch = (Switch) view.findViewById(R.id.pitch_switch);
 
-		spanBar = (SeekBar) view.findViewById(R.id.span_seekbar);
-		sensitivityBar = (SeekBar) view.findViewById(R.id.sensitivity_seekbar);
+		//spanBar = (SeekBar) view.findViewById(R.id.span_seekbar);
+		//sensitivityBar = (SeekBar) view.findViewById(R.id.sensitivity_seekbar);
 
-		spanText = (TextView) view.findViewById(R.id.span_text);
-		sensitivityText = (TextView) view.findViewById(R.id.sensitivity_text);
+		//spanText = (TextView) view.findViewById(R.id.span_text);
+		//sensitivityText = (TextView) view.findViewById(R.id.sensitivity_text);
 
 		sensorSpinner = (Spinner) view.findViewById(R.id.sensor_spinner);
 
@@ -99,7 +101,7 @@ public class SettingsFragment extends Fragment {
 			drumButtons.get(i).setVisibility(View.VISIBLE);
 		}
 
-		pitchSwitch.setChecked(drumKit.isChangePitch());
+		/*pitchSwitch.setChecked(drumKit.isChangePitch());
 		pitchSwitch
 				.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -117,7 +119,7 @@ public class SettingsFragment extends Fragment {
 		sensitivityBar.setProgress(drumKit.getThresholdProgress());
 		sensitivityText.setText("Drum Hit Sensitivity: "
 				+ String.valueOf(drumKit.getThresholdProgress() + 1));
-		sensitivityBar.setOnSeekBarChangeListener(seekListener);
+		sensitivityBar.setOnSeekBarChangeListener(seekListener);*/
 
 		List<Sensor> sensorList = ((MainActivity) activity).getSensorList();
 		ArrayList<String> sensors = new ArrayList<String>();
@@ -129,7 +131,7 @@ public class SettingsFragment extends Fragment {
 		sensorSpinner.setSelection(PreferenceManager
 				.getDefaultSharedPreferences(activity).getInt(
 						Constants.SENSOR_KEY, 0));
-		sensorSpinner.setAdapter(new ArrayAdapter<>(activity,
+		sensorSpinner.setAdapter(new ArrayAdapter<String>(activity,
 				R.layout.spinner_item, sensors));
 		sensorSpinner
 				.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -222,7 +224,7 @@ public class SettingsFragment extends Fragment {
 		}
 	};
 
-	private SeekBar.OnSeekBarChangeListener seekListener = new SeekBar.OnSeekBarChangeListener() {
+	/*private SeekBar.OnSeekBarChangeListener seekListener = new SeekBar.OnSeekBarChangeListener() {
 
 		@Override
 		public void onProgressChanged(SeekBar seekbar, int progress, boolean p3) {
@@ -243,7 +245,7 @@ public class SettingsFragment extends Fragment {
 		@Override
 		public void onStopTrackingTouch(SeekBar seekbar) {
 		}
-	};
+	};*/
 
 	public static abstract class SettingsListener {
 

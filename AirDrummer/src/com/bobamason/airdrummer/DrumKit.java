@@ -15,6 +15,7 @@ import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import com.bobamason.airdrummer.DrumKit.*;
 
 public class DrumKit {
 
@@ -26,7 +27,7 @@ public class DrumKit {
 
 	private float[] gravity = new float[3];
 
-	private float[] angles = new float[3];
+	private volatile float[] angles = new float[3];
 
 	private boolean doCalib = false;
 
@@ -64,13 +65,15 @@ public class DrumKit {
 
 	private int previewPosition;
 
-	private DrumUI drumUI;
-
-	private float calibZ;
-
 	private float lastZ;
 
 	private boolean changePitch;
+	
+	private volatile int currentView = 0;
+	
+	private boolean hitLocked = true;
+
+	private DrumKit.OnDrumHitListener mOnDrumHitListener;
 
 	public DrumKit(Activity act) {
 		activity = act;
@@ -96,6 +99,15 @@ public class DrumKit {
 				});
 	}
 
+	public void toggleView() {
+		if(run)
+			currentView = (currentView + 1) % 2;
+	}
+	
+	public synchronized int getViewPos(){
+		return currentView;
+	}
+
 	public void setChangePitch(boolean changePitch) {
 		this.changePitch = changePitch;
 		editor.putBoolean(Constants.CHANGE_PITCH_KEY, changePitch);
@@ -108,7 +120,7 @@ public class DrumKit {
 
 	public void setSpanProgress(int progress) {
 		span = progress * 5f + 10f;
-		drumUI.setSpan(span);
+		//drumUI.setSpan(span);
 		editor.putFloat(Constants.SPAN_KEY, span);
 		editor.apply();
 	}
@@ -173,10 +185,6 @@ public class DrumKit {
 		}
 	}
 
-	public void setScreenSize(float w, float h) {
-		drumUI.setUpDrumsDisplay(w, h);
-	}
-
 	public void setDrumSoundPos(int d, int pos) {
 		Drum drum = drums.get(d);
 		drum.unload();
@@ -191,7 +199,7 @@ public class DrumKit {
 
 	public void setDrumCount(int drumCount) {
 		this.drumCount = drumCount;
-		drumUI.setCount(drumCount);
+		//drumUI.setCount(drumCount);
 		drums.clear();
 		setUpDrums();
 		editor.putInt(Constants.NUM_DRUM_KEY, this.drumCount);
@@ -206,13 +214,8 @@ public class DrumKit {
 		this.run = run;
 	}
 
-	public void draw(Canvas c) {
-		if (run) {
-			drumUI.draw(c);
-		}
-	}
-
 	public void setSensorEvent(SensorEvent event) {
+		if(!run)return;
 		int type = event.sensor.getType();
 
 		if (type == Sensor.TYPE_ACCELEROMETER) {
@@ -226,12 +229,8 @@ public class DrumKit {
 
 		if (type == Sensor.TYPE_ROTATION_VECTOR) {
 			if (doCalib || firstTime) {
-				float[] a = new float[3];
 				SensorManager.getRotationMatrixFromVector(calibrateMatrix,
 						event.values);
-				SensorManager
-						.getAngleChange(a, calibrateMatrix, identityMatrix);
-				calibZ = a[0] * rad2deg;
 				doCalib = false;
 				firstTime = false;
 			}
@@ -240,39 +239,31 @@ public class DrumKit {
 					event.values);
 
 			SensorManager
-					.getAngleChange(angles, rotationMatrix, identityMatrix);
+					.getAngleChange(angles, rotationMatrix, calibrateMatrix);
 
 			angles[0] = angles[0] * rad2deg;
-			angles[0] = angles[0] - calibZ;
-			if (Math.abs(angles[0] - lastZ) > 90) {
-				angles[0] = lastZ;
-			}
 			float min = (-span * drumCount * 0.5f) + (span * 0.5f);
 			float max = (span * drumCount * 0.5f) - (span * 0.5f);
 			if (angles[0] < min) {
-				if (angles[0] < min - span * 2f) {
-					calibZ += angles[0] - min;
-				}
 				angles[0] = min;
 			} else if (angles[0] > max) {
-				if (angles[0] > max + span * 2f) {
-					calibZ += angles[0] - max;
-				}
 				angles[0] = max;
 			}
 			angles[1] = angles[1] * rad2deg;
+			if(angles[1] > 0)angles[1] = 0;
 			angles[2] = angles[2] * rad2deg;
+			if(angles[1] < -10)hitLocked = false;
 			lastZ = angles[0];
-			drumUI.setAngles(angles);
 
 			currentMillis = System.currentTimeMillis();
 			if (soundPool != null && run) {
-				boolean isHit = linearAccel > threshold
-						&& currentMillis - lastHitMillis > delay;
+				boolean isHit = !hitLocked
+					&& angles[1] > -10;
 
 				if (isHit) {
+					hitLocked = true;
 					for (int i = 0; i < drumCount; i++) {
-						drums.get(i).hit(isHit, i, angles[0]);
+						drums.get(i).hit(i, angles[0]);
 					}
 					lastHitMillis = currentMillis;
 				}
@@ -282,17 +273,21 @@ public class DrumKit {
 		}
 	}
 
+	public synchronized float[] getAngles() {
+		return angles.clone();
+	}
+
 	public Drum getDrum(int pos) {
 		return drums.get(pos);
 	}
 
 	public void onResume() {
 		drumCount = prefs.getInt(Constants.NUM_DRUM_KEY, 5);
-		span = prefs.getFloat(Constants.SPAN_KEY, 20);
+		//span = prefs.getFloat(Constants.SPAN_KEY, 20);
+		span = 20;
 		threshold = prefs.getFloat(Constants.THRESHOLD_KEY, 6);
 		changePitch = prefs.getBoolean(Constants.CHANGE_PITCH_KEY, true);
 		setUpDrums();
-		drumUI = new DrumUI(this);
 	}
 
 	public void onPause() {
@@ -352,15 +347,12 @@ public class DrumKit {
 			return soundID;
 		}
 
-		public void hit(boolean hit, int pos, float angle) {
+		public void hit(int pos, float angle) {
 			float start = (-span * drumCount * 0.5f) + pos * span;
 			float end = (-span * drumCount * 0.5f) + (pos + 1) * span;
-			if (loaded && hit && angle > start && angle < end) {
-				if (changePitch)
-					soundPool.play(soundID, 1, 1, 1, 0, pitch());
-				else
-					soundPool.play(soundID, 1, 1, 1, 0, 1.0f);
-				drumUI.hit(pos);
+			if (loaded && angle > start && angle < end) {
+				soundPool.play(soundID, 1, 1, 1, 0, 1.0f);
+				if(mOnDrumHitListener != null)mOnDrumHitListener.drumHit(pos);
 			}
 		}
 
@@ -380,5 +372,13 @@ public class DrumKit {
 				loaded = false;
 			}
 		}
+	}
+	
+	public void setOnDrumHitListener(DrumKit.OnDrumHitListener listener){
+		mOnDrumHitListener = listener;
+	}
+	
+	public static abstract class OnDrumHitListener{
+		public abstract void drumHit(int pos);
 	}
 }

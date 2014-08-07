@@ -33,4 +33,6 @@ public class Constants {
 
 	public static final int[] DEFAULT_DRUM_COLORS = { 0xff0099cc, 0xff669900,
 			0xffff8800, 0xffcc0000, 0xff9933cc };
+			
+	public static final int[] DEFAULT_DRUM_BGS = {R.drawable.drum_btn1_norm, R.drawable.drum_btn2_norm, R.drawable.drum_btn3_norm, R.drawable.drum_btn4_norm, R.drawable.drum_btn5_norm};
 }

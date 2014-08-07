@@ -103,9 +103,9 @@ public class ChooseSoundFragment extends Fragment {
 			}
 
 			holder.text.setText(Constants.SOUND_LABELS[position]);
-			int color = position == currentSound ? Constants.DEFAULT_DRUM_COLORS[drumNum]
-					: 0xff1d1d1d;
-			holder.bgLayout.setBackgroundColor(color);
+			int bgID = position == currentSound ? Constants.DEFAULT_DRUM_BGS[drumNum]
+					: R.drawable.section_bg;
+			holder.bgLayout.setBackgroundResource(bgID);
 
 			return row;
 		}

@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval" >
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <solid android:color="@color/actionbar_bg_color" />
+    <item>
+        <shape android:shape="oval">
+			<padding android:bottom="3dp"
+                android:left="0dp"
+                android:right="3dp"
+                android:top="0dp" />
 
-    <size
-        android:height="90dp"
-        android:width="90dp" />
+            <solid android:color="@color/shadow_color" />
 
-</shape>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="oval" >
+
+		<solid android:color="@color/actionbar_bg_color" />
+			
+        </shape>
+    </item>
+</layer-list>

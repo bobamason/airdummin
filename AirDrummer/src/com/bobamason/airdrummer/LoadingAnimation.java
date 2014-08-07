@@ -21,11 +21,15 @@ public class LoadingAnimation {
 
 	private float[] mvpMatrix = new float[16];
 
-	private float s = 0.3f;
-
 	private float deg2rad = (float) Math.PI / 180f;
 
 	private static final int numTriangles = 8;
+
+	private static final float radius = 0.2f;
+
+	private static final float s = 0.16f;
+
+	private static final long duration = 120;
 
 	private static final float angleStep = 360f / numTriangles;
 
@@ -39,11 +43,9 @@ public class LoadingAnimation {
 
 	private long lastMillis, currentMillis;
 
-	private static final long duration = 200;
+	private float[] c1 = { 0.3f, 0.3f, 0.3f, 1f };
 
-	private float[] c1 = { 0.7f, 0.7f, 0.7f, 1f };
-
-	private float[] c2 = { 1f, 1f, 1f, 1f };
+	private float[] c2 = { 0.7f, 0.7f, 0.7f, 1f };
 
 	private float[] color = new float[4];
 
@@ -73,8 +75,8 @@ public class LoadingAnimation {
 		currentMillis = System.currentTimeMillis();
 
 		for (int i = 0; i < numTriangles; i++) {
-			x = (float) Math.cos(i * angleStep * deg2rad) * 0.4f;
-			y = (float) Math.sin(i * angleStep * deg2rad) * 0.4f;
+			x = (float) Math.cos(i * angleStep * deg2rad) * radius;
+			y = (float) Math.sin(i * angleStep * deg2rad) * radius;
 			Matrix.setIdentityM(modelMatrix, 0);
 			Matrix.translateM(modelMatrix, 0, x, y, 1f);
 			Matrix.rotateM(modelMatrix, 0, i * angleStep, 0f, 0f, 1f);

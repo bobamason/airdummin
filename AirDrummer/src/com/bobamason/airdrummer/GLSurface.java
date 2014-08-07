@@ -3,6 +3,7 @@ package com.bobamason.airdrummer;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.view.*;
 
 public class GLSurface extends GLSurfaceView {
 
@@ -20,4 +21,11 @@ public class GLSurface extends GLSurfaceView {
 	public GLRenderer getRenderer() {
 		return renderer;
 	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		return false;
+	}
+	
+	
 }

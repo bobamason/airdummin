@@ -16,7 +16,7 @@
     <item>
         <shape>
 
-            <solid android:color="@color/drum_color2" />
+            <solid android:color="@color/section_bg_color" />
 
             <corners android:radius="2dp" />
         </shape>
