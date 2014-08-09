@@ -2,10 +2,10 @@
 <resources>
 
     <color name="actionbar_text">#E3E3E3</color>
-    <color name="actionbar_bg_color">#414141</color>
+    <color name="actionbar_bg_color">#4B535A</color>
     <color name="main_bg_color">#D4D4D4</color>
 	<color name="section_bg_color">#FFFFFF</color>
-	<color name="shadow_color">#66232323</color>
+	<color name="shadow_color">#aa575757</color>
 	<color name="drum_color1">#ff0099cc</color>
 	<color name="drum_color2">#ff669900</color>
 	<color name="drum_color3">#ffff8800</color>

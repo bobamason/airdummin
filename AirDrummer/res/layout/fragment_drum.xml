@@ -44,7 +44,7 @@
 		android:layout_centerHorizontal="true"
 		android:layout_marginTop="10dp"
 		android:id="@+id/calibration_text"
-		android:textColor="@color/text_color"
+		android:textColor="@color/actionbar_text"
 		android:visibility="gone"/>
 
 </RelativeLayout>

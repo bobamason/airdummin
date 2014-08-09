@@ -61,7 +61,7 @@ public class StlModel {
 
 	private String filename;
 
-	private StlModel.LoadStatusListener mLoadStatusListener;
+	private LoadStatusListener mLoadStatusListener = null;
 
 	private float[] projectionMatrix = new float[16];
 
@@ -73,8 +73,6 @@ public class StlModel {
 
 	private Vector3 currentTrans = new Vector3();
 	
-	private long startTime, endTime;
-	
 	private String tag;
 
 	public StlModel(Context ctx, String filename, int program) {
@@ -82,14 +80,13 @@ public class StlModel {
 		context = ctx;
 		this.filename = filename;
 		mProgram = program;
-		startTime = System.currentTimeMillis();
 		new LoadModelTask().execute(filename);
 
 		setIdentity();
 	}
 
-	public StlModel(GLRenderer render, Context ctx, String filename, int program) {
-		if (render instanceof StlModel.LoadStatusListener) {
+	public StlModel(LoadStatusListener render, Context ctx, String filename, int program) {
+		if (render instanceof LoadStatusListener) {
 			mLoadStatusListener = render;
 		}
 
@@ -349,6 +346,8 @@ public class StlModel {
 			vertexCount = vertices.length / 6;
 			Log.d(tag, "vertices[] length: " + vertices.length);
 			Log.d(tag, "vertex count: " + vertexCount);
+			Log.d(tag, "face count: " + vertexCount / 3);
+			Log.d(tag, "model memory: " + Math.round(vertices.length * 4f /1000f) + "KB");
 
 			ByteBuffer bb = ByteBuffer.allocateDirect(vertices.length * 4);
 			bb.order(ByteOrder.nativeOrder());
@@ -357,12 +356,6 @@ public class StlModel {
 			vertexBuffer.put(vertices);
 			vertexBuffer.position(0);
 
-			Log.d(tag, "buffer capacity: " + vertexBuffer.capacity());
-			Log.d(tag, "vertex stride: " + vertexStride);
-			
-			endTime = System.currentTimeMillis();
-			Log.d(tag, "time to load: " + ((endTime - startTime) / 1000d) + " seconds");
-
 			loaded = result;
 			Log.d(tag, "loaded = " +String.valueOf(loaded));
 
@@ -370,11 +363,5 @@ public class StlModel {
 				mLoadStatusListener.completed();
 			System.gc();
 		}
-	}
-
-	public static interface LoadStatusListener {
-		public abstract void started();
-
-		public abstract void completed();
 	}
 }

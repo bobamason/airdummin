@@ -7,9 +7,10 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
+import android.util.*;
 
 public class GLRenderer implements GLSurfaceView.Renderer,
-StlModel.LoadStatusListener {
+LoadStatusListener {
 
 	private final String vertexShaderCode = "uniform mat4 u_MVPMatrix;\n"
 	+ "uniform mat4 u_MVMatrix;\n" + "attribute vec4 a_Position;\n"
@@ -68,7 +69,7 @@ StlModel.LoadStatusListener {
 
 	private float[] stickColor = { 0.9f, 0.8f, 0.4f, 1f };
 
-	private boolean allLoaded = false;
+	private boolean allLoaded = true;
 
 	private int startedCount = 0;
 
@@ -81,6 +82,8 @@ StlModel.LoadStatusListener {
 	private long duration = 600;
 
 	private int currentView = 0;
+
+	private long startTime, endTime;
 
 	public void setContext(Context context) {
 		this.context = context;
@@ -96,21 +99,37 @@ StlModel.LoadStatusListener {
 
 	@Override
 	public void onSurfaceCreated(GL10 unused, EGLConfig config) {
-		GLES20.glClearColor(0.9f, 0.9f, 0.9f, 1f);
+		GLES20.glClearColor(0.05f, 0.05f, 0.05f, 1f);
 
 		int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
-		if (vertexShader == 0)
-			throw new RuntimeException("error creating vertex shader");
+
 		int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER,
 										fragmentShaderCode);
-		if (fragmentShader == 0)
-			throw new RuntimeException("error creating fragment shader");
+
 
 		mProgram = GLES20.glCreateProgram();
-		GLES20.glAttachShader(mProgram, vertexShader);
-		GLES20.glAttachShader(mProgram, fragmentShader);
 
-		GLES20.glLinkProgram(mProgram);
+		if (mProgram != 0) {
+			GLES20.glAttachShader(mProgram, vertexShader);
+			GLES20.glAttachShader(mProgram, fragmentShader);
+
+			GLES20.glLinkProgram(mProgram);
+
+			// Get the link status.
+			final int[] linkStatus = new int[1];
+			GLES20.glGetProgramiv(mProgram, GLES20.GL_LINK_STATUS, linkStatus, 0);
+
+			// If the link failed, delete the program.
+			if (linkStatus[0] == 0) {				
+				Log.e("OpenGL Program", "Error compiling program: " + GLES20.glGetProgramInfoLog(mProgram));
+				GLES20.glDeleteProgram(mProgram);
+				mProgram = 0;
+			}
+		}
+
+		if (mProgram == 0) {
+			throw new RuntimeException("Error creating program.");
+		}
 
 		GLES20.glEnable(GLES20.GL_CULL_FACE);
 		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
@@ -119,7 +138,7 @@ StlModel.LoadStatusListener {
 		loadAnim = new LoadingAnimation();
 		drumCenter = new StlModel(this, context, "drum3center.stl", mProgram);
 		drumFrame = new StlModel(this, context, "drumframe2.stl", mProgram);
-		drumStick = new StlModel(this, context, "drumstick2.stl", mProgram);
+		drumStick = new StlModel(this, context, "drumstick1.stl", mProgram);
 	}
 
 	@Override
@@ -142,35 +161,42 @@ StlModel.LoadStatusListener {
 			currentView = drumKit.getViewPos();
 			if (currentView == 0) {
 				drawView1();
-			} else if(currentView == 1) {
+			} else if (currentView == 1) {
 				drawView2();
 			}
 		} else {
 			loadAnim.draw();
 		}
 	}
-	
-	private void drawView2(){
+
+	private void drawView2() {
 		Matrix.setLookAtM(mViewMatrix, 0, 0.0f, 0.0f, -1.0f, 0f, 0f, 0f,
 						  0f, 1f, 0f);
-		Matrix.rotateM(mViewMatrix, 0, 30, 1f, 0f, 0f);
-		Matrix.translateM(mViewMatrix, 0, 0f, 1.8f, -1.5f);
+		Matrix.rotateM(mViewMatrix, 0, 20, 1f, 0f, 0f);
+		Matrix.translateM(mViewMatrix, 0, 0f, 2.6f, 0f);
+		setLightPos(-1f, -4f, 0f);
 		Matrix.multiplyMV(mLightPosInEyeSpace, 0, mViewMatrix, 0,
 						  mLightPos, 0);
-		
+
 		float count = drumKit.getCount();
 		float span = drumKit.getSpan();
 
 		drumCenter.setLightStrength(6f);
 		drumFrame.setLightStrength(6f);
 		drumStick.setLightStrength(4f);
-		
+
 		for (int i = 0; i < count; i++) {
 			drumCenter.setIdentity();
 			drumFrame.setIdentity();
 
 			drumCenter.translate(0f, -5f, 7f);
 			drumFrame.translate(0f, -5f, 7f);
+
+			if (lastMillis[i] > System.currentTimeMillis() - duration) {
+				float s = (float)Math.sin(6 * Math.PI * ((double)(System.currentTimeMillis() % duration) / duration)) * 0.3f + 0.3f;
+				drumCenter.translate(0f, 0f, s);
+				drumFrame.translate(0f, 0f, s);
+			}
 
 			float a = (-span * count * 0.5f) + i * span + span * 0.5f;
 			drumCenter.rotateEuler(a, 0f, 0f);
@@ -185,12 +211,6 @@ StlModel.LoadStatusListener {
 			drumCenter.scale(1.2f);
 			drumFrame.scale(1.2f);
 
-			if (lastMillis[i] > System.currentTimeMillis() - duration) {
-				float s = (float)Math.sin(2 * Math.PI * ((double)(System.currentTimeMillis() % duration) / duration)) * 0.3f + 1f;
-				drumCenter.scale(s, s, 0f);
-				drumFrame.scale(s, s, 0f);
-			}
-
 			drumCenter.draw(mViewMatrix, mLightPosInEyeSpace, centerColor);
 			drumFrame.draw(mViewMatrix, mLightPosInEyeSpace, hexToFloat(Constants.DEFAULT_DRUM_COLORS[i]));
 		}
@@ -203,31 +223,38 @@ StlModel.LoadStatusListener {
 		drumStick.scale(2.8f);
 		drumStick.draw(mViewMatrix, mLightPosInEyeSpace, stickColor);
 	}
-	
-	private void drawView1(){
+
+	private void drawView1() {
 		Matrix.setLookAtM(mViewMatrix, 0, 0.0f, 0.0f, -1.0f, 0f, 0f, 0f,
 						  0f, 1f, 0f);
-						  
+
 
 		Matrix.translateM(mViewMatrix, 0, 0f, -5f, 0f);
 		Matrix.rotateM(mViewMatrix, 0, -mAngles[0], 0f, 0f, 1f);
 		Matrix.rotateM(mViewMatrix, 0, -mAngles[1], 1f, 0f, 0f);
+		setLightPos(-0.5f, -2f, 0f);
 		Matrix.multiplyMV(mLightPosInEyeSpace, 0, mViewMatrix, 0,
 						  mLightPos, 0);
-		
+
 		float count = drumKit.getCount();
 		float span = drumKit.getSpan();
 
 		drumCenter.setLightStrength(9f);
 		drumFrame.setLightStrength(9f);
 		drumStick.setLightStrength(4f);
-		
+
 		for (int i = 0; i < count; i++) {
 			drumCenter.setIdentity();
 			drumFrame.setIdentity();
 
 			drumCenter.translate(0f, 0f, 3f);
 			drumFrame.translate(0f, 0f, 3f);
+
+			if (lastMillis[i] > System.currentTimeMillis() - duration) {
+				float s = (float)Math.sin(6 * Math.PI * ((double)(System.currentTimeMillis() % duration) / duration)) * 0.4f + 0.4f;
+				drumCenter.translate(0f, 0f, s);
+				drumFrame.translate(0f, 0f, s);
+			}
 
 			float a = (-span * count * 0.5f) + i * span + span * 0.5f;
 			mAngles = drumKit.getAngles();
@@ -243,18 +270,13 @@ StlModel.LoadStatusListener {
 			drumCenter.scale(1.2f);
 			drumFrame.scale(1.2f);
 
-			if (lastMillis[i] > System.currentTimeMillis() - duration) {
-				float s = (float)Math.sin(2 * Math.PI * ((double)(System.currentTimeMillis() % duration) / duration)) * 0.3f + 1f;
-				drumCenter.scale(s, s, 0f);
-				drumFrame.scale(s, s, 0f);
-			}
-
 			drumCenter.draw(mViewMatrix, mLightPosInEyeSpace, centerColor);
 			drumFrame.draw(mViewMatrix, mLightPosInEyeSpace, hexToFloat(Constants.DEFAULT_DRUM_COLORS[i]));
 		}
-		
+
 		Matrix.setLookAtM(mViewMatrix, 0, 0.0f, 0.0f, -1.0f, 0f, 0f, 0f,
 						  0f, 1f, 0f);
+		setLightPos(-0.5f, -1f, 0f);
 		Matrix.multiplyMV(mLightPosInEyeSpace, 0, mViewMatrix, 0,
 						  mLightPos, 0);
 
@@ -271,8 +293,8 @@ StlModel.LoadStatusListener {
 		tempColor[3] = 1f;
 		return tempColor;
 	}
-	
-	private void setLightPos(float x, float y, float z){
+
+	private void setLightPos(float x, float y, float z) {
 		mLightPos[0] = x;
 		mLightPos[1] = y;
 		mLightPos[2] = z;
@@ -280,16 +302,40 @@ StlModel.LoadStatusListener {
 	}
 
 	public static int loadShader(int type, String shaderCode) {
-		int shader = GLES20.glCreateShader(type);
-		GLES20.glShaderSource(shader, shaderCode);
-		GLES20.glCompileShader(shader);
-		return shader;
+		int shaderHandle = GLES20.glCreateShader(type);
+
+		if (shaderHandle != 0) {
+			// Pass in the shader source.
+			GLES20.glShaderSource(shaderHandle, shaderCode);
+
+			// Compile the shader.
+			GLES20.glCompileShader(shaderHandle);
+
+			// Get the compilation status.
+			final int[] compileStatus = new int[1];
+			GLES20.glGetShaderiv(shaderHandle, GLES20.GL_COMPILE_STATUS, compileStatus, 0);
+
+			// If the compilation failed, delete the shader.
+			if (compileStatus[0] == 0) {
+				Log.e("Shader", "Error compiling shader: " + GLES20.glGetShaderInfoLog(shaderHandle));
+				GLES20.glDeleteShader(shaderHandle);
+				shaderHandle = 0;
+			}
+		}
+
+		if (shaderHandle == 0) {			
+			throw new RuntimeException("Error creating shader.");
+		}
+
+		return shaderHandle;
 	}
 
 	@Override
 	public void started() {
-		if (allLoaded)
+		if (allLoaded) {
 			allLoaded = false;
+			startTime = System.currentTimeMillis();
+		}
 		startedCount++;
 	}
 
@@ -299,6 +345,9 @@ StlModel.LoadStatusListener {
 		if (completedCount == startedCount) {
 			allLoaded = true;
 			drumKit.setRun(true);
+			endTime = System.currentTimeMillis();
+			double elapsed = (endTime - startTime) / 1000d;
+			Log.d("load time", "time to load: " + String.valueOf(elapsed) + "sec");
 		}
 	}
 }

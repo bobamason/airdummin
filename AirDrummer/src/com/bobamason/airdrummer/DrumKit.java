@@ -37,8 +37,6 @@ public class DrumKit {
 
 	private SoundPool soundPool;
 
-	private long delay = 100;
-
 	private long currentMillis;
 
 	private long lastHitMillis;
@@ -251,14 +249,15 @@ public class DrumKit {
 			}
 			angles[1] = angles[1] * rad2deg;
 			if(angles[1] > 0)angles[1] = 0;
+			if(angles[1] < -60)angles[1] = -60;
 			angles[2] = angles[2] * rad2deg;
-			if(angles[1] < -10)hitLocked = false;
+			if(angles[1] < -4)hitLocked = false;
 			lastZ = angles[0];
 
 			currentMillis = System.currentTimeMillis();
 			if (soundPool != null && run) {
 				boolean isHit = !hitLocked
-					&& angles[1] > -10;
+					&& angles[1] > -4;
 
 				if (isHit) {
 					hitLocked = true;

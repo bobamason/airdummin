@@ -67,7 +67,7 @@ public class MainActivity extends ActionBarActivity implements
 		drumKit = new DrumKit(this);
 
 		actionBar = getSupportActionBar();
-		//actionBar.setIcon(new ColorDrawable(Color.TRANSPARENT));
+		actionBar.setIcon(new ColorDrawable(Color.TRANSPARENT));
 		actionBar.setHomeAsUpIndicator(R.drawable.ic_action_previous_item);
 
 		if (firstTime)

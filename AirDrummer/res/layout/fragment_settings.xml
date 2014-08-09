@@ -79,7 +79,7 @@
 				<Button
 					android:id="@+id/drum_btn1"
 					android:layout_width="wrap_content"
-					android:layout_height="38dp"
+					android:layout_height="48dp"
 					android:layout_margin="4dp"
 					android:layout_weight="1"
 					android:background="@drawable/drum_btn1"
@@ -91,7 +91,7 @@
 				<Button
 					android:id="@+id/drum_btn2"
 					android:layout_width="wrap_content"
-					android:layout_height="38dp"
+					android:layout_height="48dp"
 					android:layout_margin="4dp"
 					android:layout_weight="1"
 					android:background="@drawable/drum_btn2"
@@ -103,7 +103,7 @@
 				<Button
 					android:id="@+id/drum_btn3"
 					android:layout_width="wrap_content"
-					android:layout_height="38dp"
+					android:layout_height="48dp"
 					android:layout_margin="4dp"
 					android:layout_weight="1"
 					android:background="@drawable/drum_btn3"
@@ -115,7 +115,7 @@
 				<Button
 					android:id="@+id/drum_btn4"
 					android:layout_width="wrap_content"
-					android:layout_height="38dp"
+					android:layout_height="48dp"
 					android:layout_margin="4dp"
 					android:layout_weight="1"
 					android:background="@drawable/drum_btn4"
@@ -127,7 +127,7 @@
 				<Button
 					android:id="@+id/drum_btn5"
 					android:layout_width="wrap_content"
-					android:layout_height="38dp"
+					android:layout_height="48dp"
 					android:layout_margin="4dp"
 					android:layout_weight="1"
 					android:background="@drawable/drum_btn5"
